@@ -1,0 +1,47 @@
+name: Sync Design Tokens
+
+on:
+  workflow_dispatch:
+    inputs:
+      changed_variables:
+        description: 'JSON array of changed variable names (passed by Token Watcher plugin)'
+        required: false
+        default: ''
+  schedule:
+    - cron: '0 9 * * 1'  # Every Monday 09:00 UTC
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # full history needed for branch operations
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Configure git identity
+        run: |
+          git config user.name  "token-sync[bot]"
+          git config user.email "token-sync[bot]@users.noreply.github.com"
+
+      - name: Sync tokens and open PR
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          FIGMA_ACCESS_TOKEN: ${{ secrets.FIGMA_ACCESS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPO: ${{ github.repository }}
+        run: |
+          claude -p "Sync design tokens from Figma and open a PR as described in CLAUDE.md" \
+            --allowedTools "WebFetch,Read,Write,Bash" \
+            --output-format text

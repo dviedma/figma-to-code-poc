@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Inter, -apple-system, sans-serif;
+    font-size: 12px;
+    color: #1a1a1a;
+    background: #fff;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* ── Status bar ── */
+  .status-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    background: #f5f5f5;
+    font-weight: 500;
+    transition: background 0.2s;
+  }
+  .status-bar.idle       { background: #f0fdf4; color: #166534; }
+  .status-bar.activity   { background: #fefce8; color: #854d0e; }
+  .status-bar.triggering { background: #eff6ff; color: #1d4ed8; }
+  .status-bar.success    { background: #f0fdf4; color: #166534; }
+  .status-bar.error      { background: #fef2f2; color: #991b1b; }
+  .status-bar.warn       { background: #fffbeb; color: #92400e; }
+
+  .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: #9ca3af;
+  }
+  .idle .dot       { background: #22c55e; }
+  .activity .dot   { background: #eab308; animation: pulse 1s infinite; }
+  .triggering .dot { background: #3b82f6; animation: pulse 0.6s infinite; }
+  .success .dot    { background: #22c55e; }
+  .error .dot      { background: #ef4444; }
+  .warn .dot       { background: #f59e0b; }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; } 50% { opacity: 0.3; }
+  }
+
+  /* ── Section ── */
+  .section { display: flex; flex-direction: column; gap: 6px; }
+  .section-title {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #6b7280;
+  }
+
+  /* ── Form ── */
+  label { font-weight: 500; color: #374151; }
+  input {
+    width: 100%;
+    padding: 6px 8px;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    font-size: 12px;
+    font-family: inherit;
+    background: #fafafa;
+  }
+  input:focus { outline: 2px solid #3b82f6; outline-offset: -1px; border-color: transparent; }
+  input::placeholder { color: #9ca3af; }
+
+  /* ── Buttons ── */
+  .btn {
+    padding: 7px 12px;
+    border: none;
+    border-radius: 5px;
+    font-size: 12px;
+    font-family: inherit;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+  .btn-primary  { background: #3b82f6; color: #fff; }
+  .btn-primary:hover:not(:disabled) { background: #2563eb; }
+  .btn-ghost    { background: #f3f4f6; color: #374151; }
+  .btn-ghost:hover:not(:disabled) { background: #e5e7eb; }
+  .btn-row      { display: flex; gap: 6px; }
+
+  /* ── Log ── */
+  .log {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: 120px;
+    overflow-y: auto;
+  }
+  .log-entry {
+    padding: 5px 8px;
+    border-radius: 4px;
+    background: #f9fafb;
+    border: 1px solid #f3f4f6;
+    line-height: 1.4;
+  }
+  .log-entry .time  { color: #9ca3af; }
+  .log-entry .count { font-weight: 600; }
+  .log-entry.error  { background: #fef2f2; border-color: #fecaca; color: #991b1b; }
+
+  .field { display: flex; flex-direction: column; gap: 3px; }
+  hr { border: none; border-top: 1px solid #f3f4f6; }
+  .meta { color: #6b7280; font-size: 11px; }
+</style>
+</head>
+<body>
+
+<div class="status-bar idle" id="status-bar">
+  <div class="dot"></div>
+  <span id="status-text">Initializing…</span>
+</div>
+
+<div class="section">
+  <div class="section-title">Settings</div>
+  <div class="field">
+    <label>GitHub repo</label>
+    <input id="inp-repo" placeholder="org/repo" />
+  </div>
+  <div class="field">
+    <label>Personal access token</label>
+    <input id="inp-token" type="password" placeholder="ghp_…" autocomplete="off" />
+  </div>
+  <div class="field">
+    <label>Workflow file</label>
+    <input id="inp-workflow" value="token-sync.yml" />
+  </div>
+  <button class="btn btn-ghost" onclick="saveSettings()">Save settings</button>
+</div>
+
+<hr>
+
+<div class="btn-row">
+  <button class="btn btn-primary" id="trigger-btn" onclick="manualTrigger()" disabled>
+    Trigger now
+  </button>
+  <span class="meta" id="token-count"></span>
+</div>
+
+<div class="section">
+  <div class="section-title">Activity log</div>
+  <div class="log" id="log">
+    <div class="log-entry"><span class="time">—</span> Waiting for first change…</div>
+  </div>
+</div>
+
+<script>
+  let settings = { repo: '', token: '', workflow: 'token-sync.yml' };
+  let isReady  = false;
+
+  // ── Receive messages from plugin sandbox ──────────────────────────────────
+
+  window.onmessage = (event) => {
+    const msg = event.data.pluginMessage;
+    if (!msg) return;
+
+    switch (msg.type) {
+      case 'init':
+        settings = { workflow: 'token-sync.yml', ...msg.settings };
+        populateForm();
+        document.getElementById('token-count').textContent =
+          msg.tokenCount ? `${msg.tokenCount} tokens loaded` : 'No Semantic collection found';
+        document.getElementById('trigger-btn').disabled = false;
+        isReady = true;
+        setStatus('idle', 'Watching for token changes');
+        break;
+
+      case 'activity':
+        setStatus('activity', 'Detecting changes…');
+        break;
+
+      case 'idle':
+        setStatus('idle', 'Watching — no token changes');
+        break;
+
+      case 'trigger':
+        triggerGitHub(msg.changes, msg.reason);
+        break;
+
+      case 'settings-saved':
+        addLog('info', 'Settings saved');
+        break;
+
+      case 'status':
+        setStatus(msg.level || 'warn', msg.text);
+        addLog(msg.level || 'warn', msg.text);
+        break;
+    }
+  };
+
+  // ── GitHub workflow dispatch ──────────────────────────────────────────────
+
+  async function triggerGitHub(changes, reason) {
+    if (!settings.repo || !settings.token) {
+      setStatus('error', 'Set GitHub repo and token first');
+      return;
+    }
+    if (changes.length === 0) {
+      setStatus('idle', 'No variable changes detected');
+      return;
+    }
+
+    setStatus('triggering', `Triggering workflow (${changes.length} token${changes.length > 1 ? 's' : ''} changed)…`);
+
+    const url = `https://api.github.com/repos/${settings.repo}/actions/workflows/${settings.workflow}/dispatches`;
+
+    try {
+      const res = await fetch(url, {
+        method:  'POST',
+        headers: {
+          Authorization:  `Bearer ${settings.token}`,
+          Accept:         'application/vnd.github+json',
+          'Content-Type': 'application/json',
+          'X-GitHub-Api-Version': '2022-11-28',
+        },
+        body: JSON.stringify({
+          ref:    'main',
+          inputs: { changed_variables: JSON.stringify(changes.map(c => c.name)) },
+        }),
+      });
+
+      if (res.status === 204 || res.ok) {
+        const label = reason === 'manual' ? 'Manual trigger' : `Auto (${reason})`;
+        setStatus('success', `Workflow dispatched — ${label}`);
+        addLog('success', `${changes.length} token change${changes.length > 1 ? 's' : ''} → workflow triggered`, changes);
+      } else {
+        let body = '';
+        try { body = (await res.json()).message || res.statusText; } catch { body = res.statusText; }
+        setStatus('error', `GitHub ${res.status}: ${body}`);
+        addLog('error', `GitHub API error ${res.status}: ${body}`);
+      }
+    } catch (err) {
+      setStatus('error', `Network error: ${err.message}`);
+      addLog('error', `Network error: ${err.message}`);
+    }
+  }
+
+  // ── UI helpers ────────────────────────────────────────────────────────────
+
+  function setStatus(level, text) {
+    const bar = document.getElementById('status-bar');
+    bar.className = `status-bar ${level}`;
+    document.getElementById('status-text').textContent = text;
+  }
+
+  function addLog(level, text, changes) {
+    const log  = document.getElementById('log');
+    const time = new Date().toLocaleTimeString();
+
+    const entry = document.createElement('div');
+    entry.className = `log-entry${level === 'error' ? ' error' : ''}`;
+
+    let html = `<span class="time">${time}</span> ${escHtml(text)}`;
+    if (changes && changes.length) {
+      const names = changes.slice(0, 5).map(c => `<code>${escHtml(c.name)}</code>`).join(', ');
+      const more  = changes.length > 5 ? ` +${changes.length - 5} more` : '';
+      html += `<br>${names}${more}`;
+    }
+    entry.innerHTML = html;
+
+    // Remove placeholder
+    const placeholder = log.querySelector('.log-entry');
+    if (placeholder && placeholder.textContent.includes('Waiting')) placeholder.remove();
+
+    log.prepend(entry);
+
+    // Keep at most 20 entries
+    while (log.children.length > 20) log.lastChild.remove();
+  }
+
+  function escHtml(str) {
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function populateForm() {
+    if (settings.repo)     document.getElementById('inp-repo').value     = settings.repo;
+    if (settings.token)    document.getElementById('inp-token').value    = settings.token;
+    if (settings.workflow) document.getElementById('inp-workflow').value = settings.workflow;
+  }
+
+  function saveSettings() {
+    settings.repo     = document.getElementById('inp-repo').value.trim();
+    settings.token    = document.getElementById('inp-token').value.trim();
+    settings.workflow = document.getElementById('inp-workflow').value.trim() || 'token-sync.yml';
+    parent.postMessage({ pluginMessage: { type: 'save-settings', settings } }, '*');
+  }
+
+  function manualTrigger() {
+    parent.postMessage({ pluginMessage: { type: 'manual-trigger' } }, '*');
+  }
+</script>
+</body>
+</html>

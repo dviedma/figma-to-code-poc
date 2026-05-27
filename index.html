@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acme Corp</title>
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      font-size: var(--font-size-body);
+      background-color: var(--color-surface-page);
+      color: var(--color-text-default);
+    }
+
+    /* ── Button ─────────────────────────────────────── */
+    .btn-primary {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: var(--color-brand-primary);
+      color: var(--color-surface-card);
+      font-size: var(--font-size-small);
+      font-weight: 600;
+      text-decoration: none;
+      border: none;
+      border-radius: var(--radius-component-button);
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+    .btn-primary:hover {
+      background-color: var(--color-brand-primary-hover);
+    }
+    .btn-primary--lg {
+      padding: 14px 32px;
+      font-size: var(--font-size-body);
+    }
+
+    /* ── Nav ─────────────────────────────────────────── */
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 80px;
+      background-color: var(--color-surface-card);
+    }
+
+    .nav__logo {
+      font-size: var(--font-size-heading-sm);
+      font-weight: 700;
+      color: var(--color-text-default);
+      text-decoration: none;
+    }
+
+    /* ── Hero ────────────────────────────────────────── */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 96px 80px;
+      gap: 24px;
+      background-color: var(--color-surface-page);
+    }
+
+    .hero__heading {
+      font-size: 48px;
+      font-weight: 600;
+      color: var(--color-text-default);
+      max-width: 700px;
+      line-height: 1.15;
+    }
+
+    .hero__subtitle {
+      font-size: 18px;
+      color: var(--color-text-muted);
+      max-width: 560px;
+      line-height: 1.6;
+    }
+
+    /* ── Feature Cards ───────────────────────────────── */
+    .features {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 40px;
+      padding: 80px 80px;
+      background-color: var(--color-surface-page);
+    }
+
+    .features__heading {
+      font-size: var(--font-size-heading-lg);
+      font-weight: 700;
+      color: var(--color-text-default);
+      text-align: center;
+    }
+
+    .features__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      width: 100%;
+      max-width: 1120px;
+    }
+
+    .card {
+      background-color: var(--color-surface-card);
+      border: 1px solid var(--color-border-default);
+      border-radius: var(--radius-component-card);
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .card__title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--color-text-default);
+    }
+
+    .card__desc {
+      font-size: var(--font-size-small);
+      color: var(--color-text-muted);
+      line-height: 1.6;
+    }
+
+    /* ── CTA Banner ──────────────────────────────────── */
+    .cta-banner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 28px;
+      padding: 80px 80px;
+      background-color: var(--color-brand-subtle);
+      text-align: center;
+    }
+
+    .cta-banner__heading {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--color-text-default);
+    }
+
+    .cta-banner__sub {
+      font-size: var(--font-size-body);
+      color: var(--color-text-default);
+      max-width: 480px;
+    }
+
+    /* ── Footer ──────────────────────────────────────── */
+    .footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 32px 80px;
+      background-color: var(--color-surface-subtle);
+      border-top: 1px solid var(--color-border-default);
+    }
+
+    .footer__brand {
+      font-size: var(--font-size-small);
+      font-weight: 600;
+      color: var(--color-text-muted);
+    }
+
+    .footer__copy {
+      font-size: 13px;
+      color: var(--color-text-muted);
+    }
+
+    .footer__links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer__links a {
+      font-size: 13px;
+      color: var(--color-text-muted);
+      text-decoration: none;
+    }
+    .footer__links a:hover {
+      color: var(--color-text-default);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav Bar -->
+  <nav class="nav">
+    <a href="/" class="nav__logo">Acme Corp</a>
+    <a href="#" class="btn-primary">Get Started</a>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <h1 class="hero__heading">Build better products, faster</h1>
+    <p class="hero__subtitle">
+      Streamline your workflow with powerful tools designed for modern teams.
+      Start free, scale effortlessly.
+    </p>
+    <a href="#" class="btn-primary btn-primary--lg">Start for free</a>
+  </section>
+
+  <!-- Feature Cards -->
+  <section class="features">
+    <h2 class="features__heading">Everything you need to succeed</h2>
+    <div class="features__grid">
+      <article class="card">
+        <h3 class="card__title">Fast Collaboration</h3>
+        <p class="card__desc">
+          Work together in real-time with your team. Share, comment, and iterate
+          at the speed of thought.
+        </p>
+      </article>
+      <article class="card">
+        <h3 class="card__title">Powerful Analytics</h3>
+        <p class="card__desc">
+          Gain deep insights into your product usage. Make data-driven decisions
+          with confidence.
+        </p>
+      </article>
+      <article class="card">
+        <h3 class="card__title">Seamless Integrations</h3>
+        <p class="card__desc">
+          Connect your favourite tools effortlessly. Works with the apps you
+          already rely on every day.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <!-- CTA Banner -->
+  <section class="cta-banner">
+    <h2 class="cta-banner__heading">Ready to get started?</h2>
+    <p class="cta-banner__sub">
+      Join thousands of teams already using Acme Corp to ship faster.
+    </p>
+    <a href="#" class="btn-primary btn-primary--lg">Start for free</a>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <span class="footer__brand">Acme Corp</span>
+    <span class="footer__copy">© 2026 Acme Corp. All rights reserved.</span>
+    <nav class="footer__links">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Contact</a>
+    </nav>
+  </footer>
+
+</body>
+</html>
