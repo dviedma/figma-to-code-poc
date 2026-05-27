@@ -187,7 +187,7 @@
         break;
 
       case 'trigger':
-        triggerGitHub(msg.changes, msg.reason);
+        triggerGitHub(msg.changes, msg.reason, msg.tokensPayload);
         break;
 
       case 'settings-saved':
@@ -203,7 +203,7 @@
 
   // ── GitHub workflow dispatch ──────────────────────────────────────────────
 
-  async function triggerGitHub(changes, reason) {
+  async function triggerGitHub(changes, reason, tokensPayload) {
     if (!settings.repo || !settings.token) {
       setStatus('error', 'Set GitHub repo and token first');
       return;
@@ -228,7 +228,10 @@
         },
         body: JSON.stringify({
           ref:    'main',
-          inputs: { changed_variables: JSON.stringify(changes.map(c => c.name)) },
+          inputs: {
+            changed_variables: JSON.stringify(changes.map(c => c.name)),
+            tokens_data:       JSON.stringify(tokensPayload || {}),
+          },
         }),
       });
 

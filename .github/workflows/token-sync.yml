@@ -7,6 +7,10 @@ on:
         description: 'JSON array of changed variable names (passed by Token Watcher plugin)'
         required: false
         default: ''
+      tokens_data:
+        description: 'JSON object of resolved token values (passed by Token Watcher plugin)'
+        required: false
+        default: ''
   schedule:
     - cron: '0 9 * * 1'  # Every Monday 09:00 UTC
 

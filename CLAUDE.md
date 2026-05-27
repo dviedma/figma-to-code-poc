@@ -29,23 +29,25 @@ Rules:
 
 ## Step-by-step task
 
-1. Fetch variables from the Figma REST API using WebFetch:
+1. Read resolved token values from the workflow input `tokens_data`.
 
+   The Token Watcher Figma plugin resolves all Semantic variables (following
+   alias chains through the Primitives collection) and forwards the result as
+   a JSON string in the `tokens_data` workflow input. No Figma API call needed.
+
+   Parse it as:
+   ```json
+   {
+     "--color-brand-primary":        { "value": "#3b82f6", "type": "color"    },
+     "--space-component-padding-sm": { "value": "8px",     "type": "spacing"  },
+     "--radius-component-button":    { "value": "8px",     "type": "radius"   },
+     "--font-size-body":             { "value": "16px",    "type": "fontSize" }
+   }
    ```
-   GET https://api.figma.com/v1/files/MYIdf8YbpcuQDJMAacEHCZ/variables/local
-   X-Figma-Token: <value of FIGMA_ACCESS_TOKEN env var>
-   ```
 
-   The response contains `meta.variableCollections` and `meta.variables`.
-   Find the collection named "Semantic" and collect its variable IDs.
-
-   Each Semantic variable's `valuesByMode[defaultModeId]` is a `VARIABLE_ALIAS`:
-   `{ "type": "VARIABLE_ALIAS", "id": "<primitiveVarId>" }`.
-   Resolve each alias by looking up the primitive in `meta.variables` and
-   reading its raw value from the primitive collection's `defaultModeId`.
-
-   - COLOR primitive value `{ r, g, b, a }` (0–1 range) → lowercase hex, e.g. `#3b82f6`
-   - FLOAT primitive value `8` → `"8px"`
+   If `tokens_data` is empty or missing, exit with a non-zero code and print:
+   "tokens_data input is empty — trigger this workflow from the Token Watcher plugin."
+   Do not attempt to call the Figma REST API.
 
 2. Map each variable to a CSS custom property using the naming convention above.
 
