@@ -29,11 +29,12 @@ Rules:
 
 ## Step-by-step task
 
-1. Read resolved token values from the workflow input `tokens_data`.
+1. Read resolved token values from the `TOKENS_DATA` environment variable.
 
    The Token Watcher Figma plugin resolves all Semantic variables (following
    alias chains through the Primitives collection) and forwards the result as
-   a JSON string in the `tokens_data` workflow input. No Figma API call needed.
+   a JSON string via the `tokens_data` workflow input, which is injected into
+   the environment as `TOKENS_DATA`. No Figma API call needed.
 
    Parse it as:
    ```json
@@ -45,8 +46,8 @@ Rules:
    }
    ```
 
-   If `tokens_data` is empty or missing, exit with a non-zero code and print:
-   "tokens_data input is empty — trigger this workflow from the Token Watcher plugin."
+   If `TOKENS_DATA` is empty or missing, exit with a non-zero code and print:
+   "TOKENS_DATA is empty — trigger this workflow from the Token Watcher plugin."
    Do not attempt to call the Figma REST API.
 
 2. Map each variable to a CSS custom property using the naming convention above.

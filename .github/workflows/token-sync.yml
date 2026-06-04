@@ -45,6 +45,8 @@ jobs:
           FIGMA_ACCESS_TOKEN: ${{ secrets.FIGMA_ACCESS_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPO: ${{ github.repository }}
+          TOKENS_DATA: ${{ github.event.inputs.tokens_data }}
+          CHANGED_VARIABLES: ${{ github.event.inputs.changed_variables }}
         run: |
           claude -p "Sync design tokens from Figma and open a PR as described in CLAUDE.md" \
             --allowedTools "WebFetch,Read,Write,Bash" \
