@@ -1,0 +1,20 @@
+.section {
+  background-color: var(--color-surface-page);
+  padding: 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.heading {
+  font-size: var(--font-size-heading-lg);
+  font-weight: 700;
+  color: var(--color-text-default);
+  text-align: center;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-component-padding-lg);
+}

@@ -1,0 +1,21 @@
+.banner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background-color: var(--color-brand-subtle);
+  padding: 80px;
+  gap: 28px;
+}
+
+.heading {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--color-text-default);
+}
+
+.subtext {
+  font-size: var(--font-size-body);
+  color: var(--color-text-default);
+  max-width: 560px;
+}

@@ -1,0 +1,65 @@
+{
+  "Nav Bar": {
+    "figmaNodeId": "75:2",
+    "figmaUrl": "https://www.figma.com/design/MYIdf8YbpcuQDJMAacEHCZ?node-id=75-2",
+    "path": "src/components/Nav/Nav.tsx",
+    "import": "import Nav from '@/components/Nav/Nav'",
+    "props": []
+  },
+  "Hero": {
+    "figmaNodeId": "75:7",
+    "figmaUrl": "https://www.figma.com/design/MYIdf8YbpcuQDJMAacEHCZ?node-id=75-7",
+    "path": "src/components/Hero/Hero.tsx",
+    "import": "import Hero from '@/components/Hero/Hero'",
+    "props": [
+      { "figma": "Heading", "code": "heading", "type": "string" },
+      { "figma": "Subtitle", "code": "subtitle", "type": "string" },
+      { "figma": "CTA Label", "code": "ctaLabel", "type": "string" }
+    ]
+  },
+  "Feature Cards": {
+    "figmaNodeId": "75:8",
+    "figmaUrl": "https://www.figma.com/design/MYIdf8YbpcuQDJMAacEHCZ?node-id=75-8",
+    "path": "src/components/FeatureCards/FeatureCards.tsx",
+    "import": "import FeatureCards from '@/components/FeatureCards/FeatureCards'",
+    "props": []
+  },
+  "CTA Banner": {
+    "figmaNodeId": "75:9",
+    "figmaUrl": "https://www.figma.com/design/MYIdf8YbpcuQDJMAacEHCZ?node-id=75-9",
+    "path": "src/components/CtaBanner/CtaBanner.tsx",
+    "import": "import CtaBanner from '@/components/CtaBanner/CtaBanner'",
+    "props": [
+      { "figma": "Heading", "code": "heading", "type": "string" },
+      { "figma": "Subtext", "code": "subtext", "type": "string" },
+      { "figma": "CTA Label", "code": "ctaLabel", "type": "string" }
+    ]
+  },
+  "Footer": {
+    "figmaNodeId": "75:10",
+    "figmaUrl": "https://www.figma.com/design/MYIdf8YbpcuQDJMAacEHCZ?node-id=75-10",
+    "path": "src/components/Footer/Footer.tsx",
+    "import": "import Footer from '@/components/Footer/Footer'",
+    "props": []
+  },
+  "Button": {
+    "figmaNodeId": "6:3",
+    "figmaUrl": "https://www.figma.com/design/MYIdf8YbpcuQDJMAacEHCZ?node-id=6-3",
+    "path": "src/components/Button/Button.tsx",
+    "import": "import Button from '@/components/Button/Button'",
+    "props": [
+      { "figma": "Label", "code": "label", "type": "string" },
+      { "figma": "Size", "code": "size", "type": "\"sm\" | \"lg\"" }
+    ]
+  },
+  "Card": {
+    "figmaNodeId": "9:4",
+    "figmaUrl": "https://www.figma.com/design/MYIdf8YbpcuQDJMAacEHCZ?node-id=9-4",
+    "path": "src/components/Card/Card.tsx",
+    "import": "import Card from '@/components/Card/Card'",
+    "props": [
+      { "figma": "Title", "code": "title", "type": "string" },
+      { "figma": "Description", "code": "description", "type": "string" }
+    ]
+  }
+}

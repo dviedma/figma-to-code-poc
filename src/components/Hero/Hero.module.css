@@ -1,0 +1,23 @@
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background-color: var(--color-surface-page);
+  padding: 96px 80px;
+  gap: var(--space-component-padding-lg);
+}
+
+.heading {
+  font-size: 48px;
+  font-weight: 600;
+  color: var(--color-text-default);
+  max-width: 720px;
+}
+
+.subtitle {
+  font-size: var(--font-size-body);
+  line-height: 1.8;
+  color: var(--color-text-muted);
+  max-width: 560px;
+}

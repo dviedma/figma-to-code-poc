@@ -1,0 +1,16 @@
+.nav {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background-color: var(--color-surface-card);
+  padding: var(--space-component-padding-md) 80px;
+}
+
+.logo {
+  font-size: var(--font-size-heading-sm);
+  font-weight: 700;
+  color: var(--color-text-default);
+  text-decoration: none;
+}

@@ -1,0 +1,30 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: var(--radius-component-button);
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+
+.variant-primary {
+  background-color: var(--color-brand-primary);
+  color: var(--color-surface-card);
+}
+
+.variant-primary:hover {
+  background-color: var(--color-brand-primary-hover);
+}
+
+.size-sm {
+  padding: 10px 20px;
+  font-size: var(--font-size-small);
+}
+
+.size-lg {
+  padding: 14px 32px;
+  font-size: var(--font-size-body);
+}
