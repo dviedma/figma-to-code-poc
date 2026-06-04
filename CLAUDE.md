@@ -144,3 +144,24 @@ Rules:
   Do not create a PR with partial data.
 - If no tokens have changed since the last tokens.json, print "No changes" and exit 0.
   Do not open a PR for a no-op sync.
+
+---
+
+# Implementing Figma Designs
+
+When asked to implement a Figma design or build a page from a Figma file:
+
+1. **Always read `component-map.json` first.** It maps every Figma component (by name and node ID)
+   to its codebase path and import statement.
+
+2. **Use existing components — never build from scratch.** Match Figma layer names or node IDs
+   against the map. Import the component from the listed `path`.
+
+3. **Map Figma props to code props** using the `props` array in the map entry.
+   Each entry has `figma` (the Figma property name) and `code` (the React prop name).
+
+4. **For page assembly**, compose from the mapped components rather than writing raw HTML/JSX.
+   The correct import for each component is in the `import` field of the map.
+
+5. **When a Figma node ID appears in a design URL** (e.g. `node-id=75-8`), convert hyphens to
+   colons (`75:8`) and look it up in the map to identify the component.
