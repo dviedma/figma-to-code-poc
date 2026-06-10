@@ -8,8 +8,8 @@ type HeroProps = {
 };
 
 export default function Hero({
-  heading = "Build products your customers will love",
-  subtitle = "Acme Corp gives your team the tools to ship faster, collaborate smarter, and scale with confidence.",
+  heading = "Build better products, faster",
+  subtitle = "Streamline your workflow with powerful tools designed for modern teams. Start free, scale effortlessly.",
   ctaLabel = "Start for free",
 }: HeroProps) {
   return (

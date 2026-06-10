@@ -9,8 +9,8 @@ type CtaBannerProps = {
 
 export default function CtaBanner({
   heading = "Ready to get started?",
-  subtext = "Join thousands of teams already using Acme Corp to build better products, faster.",
-  ctaLabel = "Get started for free",
+  subtext = "Join thousands of teams already using Acme Corp to ship faster.",
+  ctaLabel = "Start for free",
 }: CtaBannerProps) {
   return (
     <section className={styles.banner}>

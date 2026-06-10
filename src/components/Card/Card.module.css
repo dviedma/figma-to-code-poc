@@ -6,10 +6,10 @@
 }
 
 .title {
-  font-size: var(--font-size-heading-sm);
+  font-size: 18px;
   font-weight: 600;
   color: var(--color-text-default);
-  margin-bottom: var(--space-component-padding-sm);
+  margin-bottom: 12px;
 }
 
 .description {

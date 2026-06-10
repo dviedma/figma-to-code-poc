@@ -3,19 +3,19 @@ import styles from "./FeatureCards.module.css";
 
 const CARDS = [
   {
-    title: "Blazing fast performance",
+    title: "Fast Collaboration",
     description:
-      "Deliver experiences that load instantly and respond in real time, keeping your users engaged and happy.",
+      "Work together in real-time with your team. Share, comment, and iterate at the speed of thought.",
   },
   {
-    title: "Built for collaboration",
+    title: "Powerful Analytics",
     description:
-      "Work together seamlessly with your team. Real-time updates, shared workspaces, and role-based access built in.",
+      "Gain deep insights into your product usage. Make data-driven decisions with confidence.",
   },
   {
-    title: "Enterprise-grade security",
+    title: "Seamless Integrations",
     description:
-      "SOC 2 compliant, end-to-end encrypted, and audited regularly. Your data stays safe, always.",
+      "Connect your favourite tools effortlessly. Works with the apps you already rely on every day.",
   },
 ];
 
